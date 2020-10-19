@@ -7,13 +7,7 @@ const mysql = require('mysql'), // doesn't support this new default authenticati
     app = next({ dev }),
     handle = app.getRequestHandler(),
     bodyParser = require('body-parser'),
-    mysqlConnection = require('./connection'),
     APIRoutes = require('./routes/api')
-
-// var app = express()
-// app.use(bodyParser.json())
-
-// app.use('/people', PeopleRoutes)
 
 app
   .prepare()
@@ -28,7 +22,7 @@ app
 
     // Everything Else
     server.get('*', (req, res) => {
-        handle(req, res)
+      return handle(req, res)
     })
 
     server.listen(server.get('port'), () => {

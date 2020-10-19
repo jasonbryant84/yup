@@ -1,40 +1,49 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext } from 'react'
+import ContentContext from '../context/ContentContext'
+import RemoveButton from './RemoveButton'
 import styled from 'styled-components'
+import PropTypes from 'prop-types'
 
-export default function Form(item, key) {
-    const handleChange = (e, key) => {
-        const temp = result
-        temp[key][e.target.name] = e.target.value
-        updateResult(temp)
-    }
-    
-    const postResults = (e, num) => {
-        e.preventDefault()
-        console.log(result[num])
-    
-        fetch('/api', {
-          method: 'POST'
-        })
-          .then(res => res.json())
-          .then(json => {
-            console.log('POST (response):', json)
-          })
-    }
+function Form(props) {
+  const context = useContext(ContentContext)
 
-    return (
-        <FormContainer>
-            <input type="text" name="firstname" defaultValue={item.firstname} onChange={e => handleChange(e, key)}></input>
-            <input type="text" name="lastname" defaultValue={item.lastname} onChange={e => handleChange(e, key)}></input>
-            <button onClick={e => postResults(e, key)}>Update</button>
+  const acceptChange = (e) => {
+    const temp = context.result
+    temp[key][e.target.name] = e.target.value
+    context.updateResultState(temp)
+  }
+
+  return (
+    <ContentContext.Consumer>
+      {context => (
+        <FormContainer data-num={props.data.key}>
+            <input type="text" name="firstname" value={props.data.firstname} onChange={e => acceptChange(e)}></input>
+            <input type="text" name="lastname" value={props.data.lastname} onChange={e => acceptChange(e)}></input>
+            <button onClick={e => context.putResult(e, props.data.key)}>Update</button>
+            <RemoveButton num={props.data.key} />
         </FormContainer>
-    )
+      )}
+    </ContentContext.Consumer>
+  )
+}
+
+export default Form
+
+Form.propTypes = {
+  data: PropTypes.object.isRequired
+}
+Form.defaultProps = {
+  data: {
+    firstname: 'John',
+    lastname: 'Doe'
+  }
 }
 
 const FormContainer = styled.form`
     position: absolute;
     top: 50%;
     right: 0;
-    transform: translate(-20px,-50%);
+    transform: translate(-50px,-50%);
 
     input {
         border: none;
@@ -61,12 +70,12 @@ const FormContainer = styled.form`
         transition: all .2s linear;
 
         &:hover {
-        cursor: pointer;
-        background: white;
-        color: #2e69e1;
+          cursor: pointer;
+          background: white;
+          color: #2e69e1;
         }
-        &:focus {
-        outline: none;
+          &:focus {
+          outline: none;
         }
     }
 `

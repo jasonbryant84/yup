@@ -1,0 +1,1 @@
+ALTER TABLE `Yup`.`testing` MODIFY COLUMN id INT auto_increment;
