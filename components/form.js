@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import ContentContext from '../context/ContentContext'
 import RemoveButton from './RemoveButton'
 import styled from 'styled-components'
@@ -6,19 +6,32 @@ import PropTypes from 'prop-types'
 
 function Form(props) {
   const context = useContext(ContentContext)
+  const [firstname, updateFirstname] = useState(props.data.firstname)
+  const [lastname, updateLastname] = useState(props.data.lastname)
 
   const acceptChange = (e) => {
+    if(e.target.name === 'firstname') {
+        updateFirstname(e.target.value)
+
+    } else if(e.target.name === 'lastname') { 
+        updateLastname(e.target.value)
+    }
+
     const temp = context.result
-    temp[key][e.target.name] = e.target.value
+    temp[props.data.key][e.target.name] = e.target.value
     context.updateResultState(temp)
   }
+
+  useEffect(()=> {
+    
+  },[context.result])
 
   return (
     <ContentContext.Consumer>
       {context => (
         <FormContainer data-num={props.data.key}>
-            <input type="text" name="firstname" value={props.data.firstname} onChange={e => acceptChange(e)}></input>
-            <input type="text" name="lastname" value={props.data.lastname} onChange={e => acceptChange(e)}></input>
+            <input type="text" name="firstname" value={firstname} onChange={e => acceptChange(e)}></input>
+            <input type="text" name="lastname" value={lastname} onChange={e => acceptChange(e)}></input>
             <button onClick={e => context.putResult(e, props.data.key)}>Update</button>
             <RemoveButton num={props.data.key} />
         </FormContainer>

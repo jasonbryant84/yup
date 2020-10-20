@@ -32,7 +32,8 @@ export default function ContextProvider(props) {
             .catch(()=> {
                 return false
             })
-    }, readResults = () => {
+    },
+    readResults = () => {
         fetch('/api', {
             method: 'GET'
         })
