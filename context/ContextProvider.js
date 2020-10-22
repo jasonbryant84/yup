@@ -10,24 +10,26 @@ export default function ContextProvider(props) {
     // API Calls
     const createResult = async (e, obj) => {
         e.preventDefault()
+
+        obj['sender'] = 'Jason'
+        obj['uuid'] = 'unique stuff'
     
         return await fetch('/api', {
             method: 'POST',
             headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
             },
             body: JSON.stringify(obj)
         })
             .then(res => res.json())
             .then(json => {
-                const lastRow = json[0]
-                // do this by status
-                if(lastRow) {
-                    updateResultState([...result, lastRow])
-                    incrementUpdatesMade(updatesMade + 1)
-                    return true
-                }
+              const lastRow = json[0]
+              if(lastRow) {
+                  updateResultState([...result, lastRow])
+                  incrementUpdatesMade(updatesMade + 1)
+                  return true
+              }
             })
             .catch(()=> {
                 return false

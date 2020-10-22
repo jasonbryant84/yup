@@ -6,8 +6,11 @@ const express = require('express'),
 
 // Crud
 Router.post('/', (req, res)=> {
+    console.log(req.body)
     const getLastRow = (req, res) => {
         const queryString = `SELECT * FROM testing ORDER BY id DESC LIMIT 1;`
+
+        // error handling check against req.body.textMsg
         mysqlConnection.query(queryString, (error, rows) => {
             if(!error) {
                 res
@@ -23,11 +26,13 @@ Router.post('/', (req, res)=> {
         })
     }
     
-    const queryString = `INSERT INTO \`Yup\`.\`testing\` (\`id\`, \`firstname\`, \`lastname\`) VALUES (NULL, '${req.body.firstname}', '${req.body.lastname}');`
+    // messages 
+    const queryString = `INSERT INTO \`Yup\`.\`testing\` (\`id\`, \`text\`, \`sender\`, \`uuid\`) VALUES (NULL, '${req.body.textMsg}', '${req.body.sender}', '${req.body.uuid}');`
     mysqlConnection.query(queryString, (error) => {
         if(!error) {
             getLastRow(req, res)
         } else {
+            console.log('error', error)
             res
                 .status(404)
                 .send({
